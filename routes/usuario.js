@@ -15,23 +15,33 @@ router.post('/usuarios', (req, res)=>{
 router.get('/usuarios/:correo', (req, res)=>{
     const{correo}= req.params;
     UsuarioSchema
-    .find()
-    .then((data)=> res.json(data))
+    .find({correo:correo})
+    .then(
+        (data) => {
+            if (data.length > 0) {
+                console.log("Autenticación Exitosa");
+                res.json(data);
+            } else {
+                res.status(404).json({ message: 'Correo no encontrado' });
+            }
+        }
+    )
     .catch((error)=>res.json({message: error}));
 });
 
 router.delete('/usuarios/:correo', (req, res)=>{
     const{correo}= req.params;
     UsuarioSchema
-    .remove({_correo:correo})
+    .remove({correo:correo})
     .then((data)=> res.json(data))
     .catch((error)=>res.json({message: error}));
 });
 
 router.put('/usuarios/:correo', (req, res)=>{
     const{correo}= req.params;
+    const{nombre, contrasena}= req.body;
     UsuarioSchema
-    .updateOne({_correo:correo}, {$set:{nombre, correo, contrasena}})
+    .updateOne({correo:correo}, {$set:{nombre, contrasena}})
     .then((data)=> res.json(data))
     .catch((error)=>res.json({message: error}));
 });
