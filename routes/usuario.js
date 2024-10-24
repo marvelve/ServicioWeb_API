@@ -29,10 +29,17 @@ router.get('/usuarios/:correo', (req, res)=>{
     .catch((error)=>res.json({message: error}));
 });
 
+router.get('/usuarios', (req, res)=>{
+    UsuarioSchema
+    .find()
+    .then((data)=> res.json(data))
+    .catch((error)=>res.json({message: error}));
+});
+
 router.delete('/usuarios/:correo', (req, res)=>{
     const{correo}= req.params;
     UsuarioSchema
-    .remove({correo:correo})
+    .findOneAndDelete({correo:correo})
     .then((data)=> res.json(data))
     .catch((error)=>res.json({message: error}));
 });
